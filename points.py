@@ -34,6 +34,7 @@ nodes = {
 }
 
 # Extract minimal edge info (for both algorithms)
+#u is the starting node, v is the ending node
 edges = []
 for u, v, data in G.edges(data=True):
     edges.append({
