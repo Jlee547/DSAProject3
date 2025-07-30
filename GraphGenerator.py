@@ -7,6 +7,16 @@ import random
 
 
 class GraphGenerator:
+
+    class Node:
+        def __init__(self, id=0, lat=0.00, lon=0.00, x=0.00, y=0.00):
+            self.id = id
+            self.lat = lat
+            self.lon = lon
+            self.x = x
+            self.y = y
+
+
     def __init__(self, node_count):
         self.graph = defaultdict(set)
         self.nodes = dict()
@@ -15,8 +25,6 @@ class GraphGenerator:
         self.generate_graph()
         self.sample_connected_subgraph(node_count)
         self.generate_nodes()
-
-        print("Components: ", self.count_components())
     
 
     def generate_graph(self):
@@ -45,51 +53,58 @@ class GraphGenerator:
                 if int(node) in self.node_set:
                     lat = float(nodes_f[node]["lat"])
                     lon = float(nodes_f[node]["lon"])
-                    self.nodes[int(node)] = (lat, lon)
+                    self.nodes[int(node)] = GraphGenerator.Node(id=int(node), lat=lat, lon=lon)
 
         end = time.time()
         print(f"It took {end - start} time to build the nodes")
 
-    def count_components(self):
-        visited = set()
-        components = 0
+    
+    def sample_connected_subgraph(self, n):
 
-        for node in self.nodes:
-            if node in visited:
-                continue
+        remaining = set(self.graph.keys())
+        while remaining:
 
-            components += 1
+            seed = random.choice(tuple(remaining))
+            visited = {seed}
+            q = deque([seed])
 
-            stack = [node]
-            visited.add(node)
-            while stack:
-                u = stack.pop()
+
+            while q and len(visited) < n:
+                u = q.popleft()
                 for v, _ in self.graph[u]:
                     if v not in visited:
                         visited.add(v)
-                        stack.append(v)
+                        q.append(v)
+                        if len(visited) >= n:
+                            break
 
-        return components
+            if len(visited) >= n:
+                print(f"Found connected component of size {len(visited)}")
+                self.node_set = visited
+                return
+
+            remaining -= visited
+
+
+        print(f"No connected component of size ≥ {n} exists in the graph.")
+        self.node_set = set()
     
-    def sample_connected_subgraph(self, n):
-        seed = random.choice(list(self.graph.keys()))
-        visited = {seed}
-        q = deque([seed])
+    def draw_to_canvas(self, canvas):
+        W = int(canvas['width'])
+        H = int(canvas['height'])
 
-        while q and len(visited) < n:
-            u = q.popleft()
-            for v in self.graph[u]:
-                if v not in visited:
-                    visited.add(v)
-                    q.append(v)
-                    if len(visited) >= n:
-                        break
-        
-        self.node_set = visited
+        lats = [self.nodes[n].lat for n in self.nodes]
+        lons = [self.nodes[n].lon for n in self.nodes]
+        lat_min, lat_max = min(lats), max(lats)
+        lon_min, lon_max = min(lons), max(lons)
 
-    
+        for node in self.nodes:
+            x = (self.nodes[node].lon - lon_min)/(lon_max - lon_min) * 900
+            y = (lat_max - self.nodes[node].lat)/(lat_max - lat_min) * 700
+            canvas.create_oval(x-3, y-3, x+3, y+3, fill="black")
 
-generator = GraphGenerator(10000)
+#generator = GraphGenerator(1000)
+
 
 ''' random - 
             random_edges = random.sample(edges, node_count)

@@ -1,18 +1,14 @@
 import tkinter as tk
 from collections import defaultdict
-
-'''
-
-
-'''
+from GraphGenerator import GraphGenerator
 
 
 #node_count = int(input("How many nodes would you like to consider? "))
-node_count = 100
+node_count = 1000
+main_generator = GraphGenerator(node_count)
 
 
-
-if node_count <= 1000:
+if node_count <= 10000:
         
     def search_1():
         print("Search_1")
@@ -22,7 +18,7 @@ if node_count <= 1000:
 
     def on_canvas_click(event):
         x, y = event.x, event.y
-        canvas.create_oval(x-2, y-2, x+2, y+2, fill="black")
+        canvas.create_oval(x-3, y-3, x+3, y+3, fill="black")
 
     # Create root, frame, buttons, and canvas
 
@@ -43,6 +39,7 @@ if node_count <= 1000:
     canvas = tk.Canvas(root, bg="white")
     canvas.pack(fill="both", expand=True)
     canvas.bind("<Button-1>", on_canvas_click)
+    main_generator.draw_to_canvas(canvas)
 
     root.mainloop()
 
