@@ -27,7 +27,7 @@ def dijkstra(src: int, dst: int, graph: dict[int, set[tuple[int,float]]]) -> lis
 
     #Creates a min heap for the start node 
     minHeap = []
-    heapq.heaqpush(minHeap, (startNode, 0))
+    heapq.heappush(minHeap, (startNode, 0))
     distances[startNode] = 0
 
     #Dijkstra's algorithm
@@ -46,7 +46,7 @@ def dijkstra(src: int, dst: int, graph: dict[int, set[tuple[int,float]]]) -> lis
                 if altDistance < distances[neighbor]:
                     distances[neighbor] = altDistance
                     previousNode[neighbor] = currentNode
-                    heapq.heaqpush(minHeap, (neighbor, altDistance))
+                    heapq.heappush(minHeap, (neighbor, altDistance))
 
     currentNode = destinationNode
 
