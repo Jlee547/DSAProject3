@@ -7,8 +7,8 @@ import math
 import time
 
 
-#node_count = int(input("How many nodes would you like to consider? "))
-node_count = 100
+node_count = int(input("How many nodes would you like to consider? "))
+
 main_generator = GraphGenerator(node_count)
 
 class State:
@@ -35,7 +35,7 @@ if node_count <= 10000:
 
     def reset_board():
         canvas.delete("all")
-        main_generator.reset_graph(100)
+        main_generator.reset_graph(node_count)
         main_generator.draw_to_canvas(canvas)
         main_generator.draw_edges(canvas)
         main_generator.generate_subset_graph()
