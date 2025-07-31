@@ -4,8 +4,8 @@ takes in 1 string source id, 1 string destination id
 returns the shortest path between the 2 nodes in the form of a list of nodes.
 
 '''
-import json
 
+import heapq
 
 def dijkstra(src: int, dst: int, graph: dict[int, set[tuple[int, float]]]) -> list[str]:
     
@@ -20,7 +20,7 @@ def dijkstra(src: int, dst: int, graph: dict[int, set[tuple[int, float]]]) -> li
     destinationNode = dst
 
     distances = {}
-    visited = {}
+    visited = set()
 
     path = []
     previousNode = {}
@@ -28,40 +28,30 @@ def dijkstra(src: int, dst: int, graph: dict[int, set[tuple[int, float]]]) -> li
     #Created the intial distances and visited nodes
     for node in nodes:
         distances[node] = float('inf')
-        visited[node] = False
         previousNode[node] = None
 
-
+    minHeap = []
+    heapq.heappush(minHeap, (startNode, 0))
     distances[startNode] = 0
     
     
     while True:
-        minDistance = float('inf')
-        currentNode = None
-
-        #Gets the node with the least distance 
-        for node in nodes:
-            if not visited[node] and distances[node] < minDistance:
-                minDistance = distances[node]
-                currentNode = node
+        currentNode, currentDistance = heapq.heappop(minHeap)
         
         if currentNode is None or currentNode == destinationNode:
             break
 
-        visited[currentNode] = True
+        visited.add(currentNode)
 
-        #Just double checks that all nodes are in the list so it prevents any errors
-        for node in nodes:
-            if node not in graph:
-                graph[node] = []
         
         #Looks at the neighbors of the currentNodes and checks if the distance is less than the current distance
         for neighbor, length in graph[currentNode]:
-            if not visited[neighbor]:
+            if neighbor not in visited:
                 altDistance = distances[currentNode] + length
                 if altDistance < distances[neighbor]:
                     distances[neighbor] = altDistance
                     previousNode[neighbor] = currentNode
+                    heapq.heappush(minHeap, (neighbor, altDistance))
 
 
     currentNode = destinationNode
@@ -75,5 +65,3 @@ def dijkstra(src: int, dst: int, graph: dict[int, set[tuple[int, float]]]) -> li
     path.reverse()
 
     return path
-
-print(dijkstra("84909346", "12774696408"))

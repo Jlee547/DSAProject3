@@ -1,6 +1,9 @@
 [
-    {"u": "A", "v": "B", "length": 1},
-    {"u": "B", "v": "C", "length": 3},
-    {"u": "A", "v": "D", "length": 4},
-    {"u": "D", "v": "C", "length": 1}
+    {"u": "C", "v": "E", "length": 2},
+    {"u": "E", "v": "F", "length": 5},
+    {"u": "F", "v": "A", "length": 7},
+    {"u": "B", "v": "F", "length": 4},
+    {"u": "C", "v": "G", "length": 3},
+    {"u": "G", "v": "H", "length": 2},
+    {"u": "H", "v": "D", "length": 6}
 ]
