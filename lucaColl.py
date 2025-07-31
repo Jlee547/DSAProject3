@@ -5,7 +5,7 @@ returns the shortest path between the 2 nodes in the form of a list of nodes.
 '''
 import heapq
 
-def astar(src: int, dst: int, graph: dict[int, set[tuple[int, float]]]) -> list[str]:
+def astar(src: int, dst: int, graph: dict[int, set[tuple[int, float]]]) -> list[int]:
     if src not in graph or dst not in graph:
         return []
     # priority queue 
@@ -29,9 +29,9 @@ def astar(src: int, dst: int, graph: dict[int, set[tuple[int, float]]]) -> list[
         if curr_node == dst:
             path = []
             while curr_node in origin:
-                path.append(str(curr_node))
+                path.append(curr_node)
                 curr_node = origin[curr_node]
-            path.append(str(src))
+            path.append(src)
             path.reverse()
             return path
         if curr_est > est_cost[curr_node]:
