@@ -122,8 +122,8 @@ class GraphGenerator:
 
         # iterate through all nodes and draw based on percent of range of lats and lons, then set node position
         for node in self.nodes:
-            x = (self.nodes[node].lon - lon_min)/(lon_max - lon_min) * 900
-            y = (lat_max - self.nodes[node].lat)/(lat_max - lat_min) * 700
+            x = 5 + (self.nodes[node].lon - lon_min)/(lon_max - lon_min) * 890
+            y = 5 + (lat_max - self.nodes[node].lat)/(lat_max - lat_min) * 690
             canvas.create_oval(x-2, y-2, x+2, y+2, fill="black")
             self.nodes[node].x = x
             self.nodes[node].y = y
