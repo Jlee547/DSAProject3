@@ -63,12 +63,12 @@ def astar(src: int, dst: int, graph: dict[int, set[tuple[int, float]]]) -> list[
 #     # Test 1: Normal path
 #     result = astar(1, 5, test_graph)
 #     print(f"Test 1 - Path from 1 to 5: {result}")
-#     print("✓ Should be ['1','2','4','5'] or ['1','3','4','5']\n")
+#     print("✓ Should be [1, 2, 4, 5] or [1, 3, 4, 5]\n")
 
 #     # Test 2: Same start and end
 #     result = astar(3, 3, test_graph)
 #     print(f"Test 2 - Path from 3 to 3: {result}")
-#     print("✓ Should be ['3']\n")
+#     print("✓ Should be [3]\n")
 
 #     # Test 3: No path exists
 #     no_path_graph = {1: {(2, 1.0)}, 2: {(1, 1.0)}, 3: set()}
@@ -79,7 +79,7 @@ def astar(src: int, dst: int, graph: dict[int, set[tuple[int, float]]]) -> list[
 #     # Test 4: Direct connection
 #     result = astar(2, 4, test_graph)
 #     print(f"Test 4 - Path from 2 to 4: {result}")
-#     print("✓ Should be ['2','4']\n")
+#     print("✓ Should be [2, 4]\n")
 
 #     # Test 5: Non-existent node
 #     result = astar(1, 99, test_graph)
