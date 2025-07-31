@@ -40,6 +40,7 @@ if node_count <= 10000:
     canvas.pack(fill="both", expand=True)
     canvas.bind("<Button-1>", on_canvas_click)
     main_generator.draw_to_canvas(canvas)
+    main_generator.draw_edges(canvas)
 
     root.mainloop()
 

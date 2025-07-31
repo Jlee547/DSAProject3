@@ -18,9 +18,9 @@ class GraphGenerator:
 
 
     def __init__(self, node_count):
-        self.graph = defaultdict(set)
-        self.nodes = dict()
-        self.node_set = set()
+        self.graph = defaultdict(set)   # All nodes with a value of a set of tuples where tuple[0] is the neighbor node and tuple[1] is the weight
+        self.nodes = dict()             # Dictionary storing the key as the int (id) and a value of the node object
+        self.node_set = set()           # Int (id) value for all considered nodes
 
         self.generate_graph()
         self.sample_connected_subgraph(node_count)
@@ -101,7 +101,20 @@ class GraphGenerator:
         for node in self.nodes:
             x = (self.nodes[node].lon - lon_min)/(lon_max - lon_min) * 900
             y = (lat_max - self.nodes[node].lat)/(lat_max - lat_min) * 700
-            canvas.create_oval(x-3, y-3, x+3, y+3, fill="black")
+            canvas.create_oval(x-2, y-2, x+2, y+2, fill="black")
+            self.nodes[node].x = x
+            self.nodes[node].y = y
+    
+    def draw_edges(self, canvas):
+        # Every considered node id
+        seen = set()
+        for node in self.node_set:
+            
+            # Search for edge tuples in set
+            for v, weight in self.graph[node]:
+                if v in self.node_set and (v, node) not in seen:
+                    canvas.create_line(self.nodes[node].x, self.nodes[node].y, self.nodes[v].x, self.nodes[v].y, fill="black", width=1) # create line from origin(node) to neighbor(v)
+                    seen.add((node, v))
 
 #generator = GraphGenerator(1000)
 
