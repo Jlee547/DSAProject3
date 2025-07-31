@@ -2,7 +2,7 @@ import json
 from collections import defaultdict, deque
 import time
 import random
-
+import math
 
 
 
@@ -18,16 +18,25 @@ class GraphGenerator:
 
 
     def __init__(self, node_count):
+
+        '''
+        graph[85929358923] = set((4289124, 2352), (123491234, 325), (2352346235,))
+        
+        '''
+        self.node_count = node_count
         self.graph = defaultdict(set)   # All nodes with a value of a set of tuples where tuple[0] is the neighbor node and tuple[1] is the weight
         self.nodes = dict()             # Dictionary storing the key as the int (id) and a value of the node object
         self.node_set = set()           # Int (id) value for all considered nodes
+        self.graph_subset = defaultdict(set) #subset graph
 
         self.generate_graph()
         self.sample_connected_subgraph(node_count)
         self.generate_nodes()
+        self.generate_subset_graph()
     
 
     def generate_graph(self):
+        # creates graph from entire dataset
         start = time.time()
         with open("project3_edges.json", "r") as f:
             edges = json.load(f)
@@ -44,6 +53,7 @@ class GraphGenerator:
 
 
     def generate_nodes(self):
+        #creates node dictionary that assigns a node object to an id
         start = time.time()
         with open("project3_nodes.json", "r") as f:
             nodes_f = json.load(f)
@@ -60,7 +70,7 @@ class GraphGenerator:
 
     
     def sample_connected_subgraph(self, n):
-
+        # picks random seed and continues to search throughout the entire graph
         remaining = set(self.graph.keys())
         while remaining:
 
@@ -68,7 +78,7 @@ class GraphGenerator:
             visited = {seed}
             q = deque([seed])
 
-
+            #performs a bfs and will return if graph has enough nodes, otherwise, continue searching original graph for a large enoughsubset
             while q and len(visited) < n:
                 u = q.popleft()
                 for v, _ in self.graph[u]:
@@ -88,16 +98,29 @@ class GraphGenerator:
 
         print(f"No connected component of size ≥ {n} exists in the graph.")
         self.node_set = set()
+
+    def generate_subset_graph(self):
+        #for every node,
+        for node in self.node_set:
+            # consider neighbors
+            for v, weight in self.graph[node]:
+                #consider if neighbor is in graph subset, if so, add to subset graph
+                if v in self.node_set:
+                    real_weight = math.sqrt((self.nodes[node].x - self.nodes[v].x) ** 2 + (self.nodes[node].y - self.nodes[v].y) ** 2)
+                    self.graph_subset[node].add((v, real_weight))
+                    self.graph_subset[v].add((node, real_weight))
     
     def draw_to_canvas(self, canvas):
         W = int(canvas['width'])
         H = int(canvas['height'])
 
+        # list of lats and lons
         lats = [self.nodes[n].lat for n in self.nodes]
         lons = [self.nodes[n].lon for n in self.nodes]
         lat_min, lat_max = min(lats), max(lats)
         lon_min, lon_max = min(lons), max(lons)
 
+        # iterate through all nodes and draw based on percent of range of lats and lons, then set node position
         for node in self.nodes:
             x = (self.nodes[node].lon - lon_min)/(lon_max - lon_min) * 900
             y = (lat_max - self.nodes[node].lat)/(lat_max - lat_min) * 700
@@ -110,14 +133,24 @@ class GraphGenerator:
         seen = set()
         for node in self.node_set:
             
-            # Search for edge tuples in set
+            # Search for edge tuples in set, making sure to check for reversed direction
             for v, weight in self.graph[node]:
                 if v in self.node_set and (v, node) not in seen:
                     canvas.create_line(self.nodes[node].x, self.nodes[node].y, self.nodes[v].x, self.nodes[v].y, fill="black", width=1) # create line from origin(node) to neighbor(v)
                     seen.add((node, v))
 
-#generator = GraphGenerator(1000)
+    def reset_graph(self, new_node_count):
+        self.node_count = new_node_count
 
+        self.nodes.clear()
+        self.node_set.clear()
+        self.graph_subset.clear()
+
+        self.sample_connected_subgraph(self.node_count)
+        self.generate_nodes()
+        self.generate_subset_graph()
+
+#generator = GraphGenerator(1000)
 
 ''' random - 
             random_edges = random.sample(edges, node_count)
