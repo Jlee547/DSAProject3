@@ -1,68 +1,52 @@
+import heapq
 
-'''
-takes in 1 string source id, 1 string destination id
-returns the shortest path between the 2 nodes in the form of a list of nodes.
-
-'''
-import json
-
-
-def dijkstra(src: int, dst: int, graph: dict[int, set[tuple[int, float]]]) -> list[str]:
-    
+def dijkstra(src: int, dst: int, graph: dict[int, set[tuple[int,float]]]) -> list[str]:
     nodes = []
 
     for node in graph.keys():
         nodes.append(node)
 
     
-    # Dijkstra's algorithm
+    #Start and destination nodes
     startNode = src
     destinationNode = dst
 
+    #Distances and visited nodes
     distances = {}
-    visited = {}
+    visited = set()
 
+    #Path from start to destination
     path = []
+
     previousNode = {}
 
-    #Created the intial distances and visited nodes
+    #Initializes distances and previous nodes
     for node in nodes:
         distances[node] = float('inf')
-        visited[node] = False
         previousNode[node] = None
 
-
+    #Creates a min heap for the start node 
+    minHeap = []
+    heapq.heaqpush(minHeap, (startNode, 0))
     distances[startNode] = 0
-    
-    
-    while True:
-        minDistance = float('inf')
-        currentNode = None
 
-        #Gets the node with the least distance 
-        for node in nodes:
-            if not visited[node] and distances[node] < minDistance:
-                minDistance = distances[node]
-                currentNode = node
-        
+    #Dijkstra's algorithm
+    while True:
+        currentNode, currentDistance = heapq.heappop(minHeap)
+
         if currentNode is None or currentNode == destinationNode:
             break
 
-        visited[currentNode] = True
+        visited.add(currentNode)
 
-        #Just double checks that all nodes are in the list so it prevents any errors
-        for node in nodes:
-            if node not in graph:
-                graph[node] = []
-        
-        #Looks at the neighbors of the currentNodes and checks if the distance is less than the current distance
+        #Looks at the neighbors of the currentNodes and checks if the distance is less than the current distance if it is it does dijkstra's logic
         for neighbor, length in graph[currentNode]:
-            if not visited[neighbor]:
+            if neighbor not in visited:
                 altDistance = distances[currentNode] + length
                 if altDistance < distances[neighbor]:
                     distances[neighbor] = altDistance
                     previousNode[neighbor] = currentNode
-
+                    heapq.heaqpush(minHeap, (neighbor, altDistance))
 
     currentNode = destinationNode
 
@@ -70,10 +54,8 @@ def dijkstra(src: int, dst: int, graph: dict[int, set[tuple[int, float]]]) -> li
     while currentNode is not None:
         path.append(currentNode)
         currentNode = previousNode[currentNode]
-
-    #Reverses the path so now its from startNode to destinationNode
+    
+    #Reverses the path cause it was from destinationNode to startNode now its startNode to destinationNode
     path.reverse()
 
     return path
-
-print(dijkstra("84909346", "12774696408"))
