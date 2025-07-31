@@ -47,43 +47,43 @@ def astar(src: int, dst: int, graph: dict[int, set[tuple[int, float]]]) -> list[
     
     return []
 
-# # Test cases
-# if __name__ == "__main__":
-#     # Test graph
-#     test_graph = {
-#         1: {(2, 1.5), (3, 2.0)},
-#         2: {(1, 1.5), (4, 1.2)},
-#         3: {(1, 2.0), (4, 1.8), (5, 2.5)},
-#         4: {(2, 1.2), (3, 1.8), (5, 1.0)},
-#         5: {(3, 2.5), (4, 1.0)}
-#     }
+# Test cases
+if __name__ == "__main__":
+    # Test graph
+    test_graph = {
+        1: {(2, 1.5), (3, 2.0)},
+        2: {(1, 1.5), (4, 1.2)},
+        3: {(1, 2.0), (4, 1.8), (5, 2.5)},
+        4: {(2, 1.2), (3, 1.8), (5, 1.0)},
+        5: {(3, 2.5), (4, 1.0)}
+    }
 
-#     print("Running tests...\n")
+    print("Running tests...\n")
 
-#     # Test 1: Normal path
-#     result = astar(1, 5, test_graph)
-#     print(f"Test 1 - Path from 1 to 5: {result}")
-#     print("✓ Should be ['1','2','4','5'] or ['1','3','4','5']\n")
+    # Test 1: Normal path
+    result = astar(1, 5, test_graph)
+    print(f"Test 1 - Path from 1 to 5: {result}")
+    print("✓ Should be [1, 2, 4, 5] or [1, 3, 4, 5]\n")
 
-#     # Test 2: Same start and end
-#     result = astar(3, 3, test_graph)
-#     print(f"Test 2 - Path from 3 to 3: {result}")
-#     print("✓ Should be ['3']\n")
+    # Test 2: Same start and end
+    result = astar(3, 3, test_graph)
+    print(f"Test 2 - Path from 3 to 3: {result}")
+    print("✓ Should be [3]\n")
 
-#     # Test 3: No path exists
-#     no_path_graph = {1: {(2, 1.0)}, 2: {(1, 1.0)}, 3: set()}
-#     result = astar(1, 3, no_path_graph)
-#     print(f"Test 3 - Path from 1 to 3 (no path): {result}")
-#     print("✓ Should be []\n")
+    # Test 3: No path exists
+    no_path_graph = {1: {(2, 1.0)}, 2: {(1, 1.0)}, 3: set()}
+    result = astar(1, 3, no_path_graph)
+    print(f"Test 3 - Path from 1 to 3 (no path): {result}")
+    print("✓ Should be []\n")
 
-#     # Test 4: Direct connection
-#     result = astar(2, 4, test_graph)
-#     print(f"Test 4 - Path from 2 to 4: {result}")
-#     print("✓ Should be ['2','4']\n")
+    # Test 4: Direct connection
+    result = astar(2, 4, test_graph)
+    print(f"Test 4 - Path from 2 to 4: {result}")
+    print("✓ Should be [2, 4]\n")
 
-#     # Test 5: Non-existent node
-#     result = astar(1, 99, test_graph)
-#     print(f"Test 5 - Path from 1 to 99: {result}")
-#     print("✓ Should be []\n")
+    # Test 5: Non-existent node
+    result = astar(1, 99, test_graph)
+    print(f"Test 5 - Path from 1 to 99: {result}")
+    print("✓ Should be []\n")
 
-#     print("Testing complete.")
+    print("Testing complete.")
